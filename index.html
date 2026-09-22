@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VARORDERZ — Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #12121a;
+    --card: rgba(255,255,255,0.04);
+    --border: rgba(168,85,247,0.25);
+    --primary: #a855f7;
+    --accent: #06b6d4;
+    --pink: #ec4899;
+    --text: #e5e7eb;
+    --muted: #9ca3af;
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(168,85,247,0.15), transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(6,182,212,0.12), transparent 40%);
+  }
+  header {
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    backdrop-filter: blur(12px);
+    background: rgba(10,10,15,0.7);
+    z-index: 50;
+  }
+  .logo {
+    font-size: 22px;
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 1px;
+  }
+  .logo span { color: var(--pink); -webkit-text-fill-color: var(--pink); }
+  .hero { text-align: center; padding: 60px 20px 40px; }
+  .hero h1 {
+    font-size: clamp(28px, 6vw, 48px);
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .hero h1 .grad {
+    background: linear-gradient(90deg, var(--primary), var(--accent), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero p { color: var(--muted); max-width: 500px; margin: 0 auto; font-size: 15px; }
+  section { padding: 30px 20px; max-width: 1200px; margin: 0 auto; }
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::before {
+    content:'';
+    width: 4px; height: 22px;
+    background: linear-gradient(180deg, var(--primary), var(--accent));
+    border-radius: 4px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+    box-shadow: 0 8px 30px rgba(168,85,247,0.25);
+  }
+  .card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    background: var(--bg2);
+  }
+  .card-body { padding: 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .card-body h3 { font-size: 15px; font-weight: 600; }
+  .card-body .desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .price { font-size: 16px; font-weight: 700; color: var(--accent); }
+  .btn-buy {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--primary), var(--pink));
+    color: #fff;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: 0.3s;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-buy:hover { opacity: 0.85; box-shadow: 0 4px 20px rgba(236,72,153,0.4); }
+  .promo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .promo {
+    background: var(--card);
+    border: 1px solid rgba(6,182,212,0.3);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: 0.3s;
+  }
+  .promo:hover { border-color: var(--accent); box-shadow: 0 8px 30px rgba(6,182,212,0.25); }
+  .promo img { width: 100%; height: 140px; object-fit: cover; background: var(--bg2); }
+  .promo-body { padding: 14px; }
+  .promo-body h3 { font-size: 15px; margin-bottom: 6px; }
+  .promo-body p { font-size: 12px; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+  .btn-visit {
+    display: inline-block;
+    padding: 8px 16px;
+    background: var(--accent);
+    color: #000;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700;
+    transition: 0.3s;
+  }
+  .btn-visit:hover { background: var(--primary); color: #fff; }
+  .empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+    font-size: 14px;
+    border: 1px dashed var(--border);
+    border-radius: 16px;
+  }
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 24px;
+    max-width: 480px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: pop 0.3s;
+  }
+  @keyframes pop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .modal h2 {
+    font-size: 18px;
+    margin-bottom: 16px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .field { margin-bottom: 12px; }
+  .field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; font-weight: 500; }
+  .field input, .field textarea {
+    width: 100%;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 13px;
+    font-family: inherit;
+    transition: 0.2s;
+  }
+  .field input:focus, .field textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(168,85,247,0.15);
+  }
+  .field textarea { resize: vertical; min-height: 70px; }
+  .btn {
+    width: 100%;
+    padding: 11px;
+    background: linear-gradient(90deg, var(--primary), var(--pink));
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 6px;
+  }
+  .btn:hover { opacity: 0.9; }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+  .btn-outline:hover { border-color: var(--primary); background: rgba(168,85,247,0.1); }
+  .tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+  .tab {
+    padding: 8px 14px;
+    font-size: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-weight: 500;
+    transition: 0.2s;
+  }
+  .tab.active { background: rgba(168,85,247,0.15); color: var(--primary); }
+  .dev-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    gap: 10px;
+  }
+  .dev-item-info { flex: 1; min-width: 0; }
+  .dev-item-info h4 { font-size: 13px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dev-item-info span { font-size: 11px; color: var(--muted); }
+  .dev-actions { display: flex; gap: 6px; }
+  .dev-actions button {
+    padding: 6px 10px;
+    font-size: 11px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .btn-del { background: rgba(239,68,68,0.2); color: #f87171; }
+  .btn-del:hover { background: rgba(239,68,68,0.35); }
+  footer {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--muted);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+  .dev-trigger {
+    color: #2a2a35;
+    cursor: pointer;
+    user-select: none;
+    font-size: 11px;
+    transition: 0.3s;
+  }
+  .dev-trigger:hover { color: var(--muted); }
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--bg2);
+    border: 1px solid var(--primary);
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    transition: 0.3s;
+    z-index: 200;
+    box-shadow: 0 8px 30px rgba(168,85,247,0.4);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  @media (max-width: 500px) {
+    .hero { padding: 40px 16px 30px; }
+    section { padding: 24px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">VAR<span>ORDERZ</span></div>
+</header>
+
+<div class="hero">
+  <h1>Belanja <span class="grad">Produk Digital</span><br>dari Varoo</h1>
+  <p>Toko pribadi Varoo. Produk pilihan, harga jelas, langsung order via WhatsApp.</p>
+</div>
+
+<section>
+  <div class="section-title">🛒 Produk Tersedia</div>
+  <div id="productList" class="grid"></div>
+</section>
+
+<section>
+  <div class="section-title">🌐 Promosi Web</div>
+  <div id="promoList" class="promo-grid"></div>
+</section>
+
+<footer>
+  © 2026 <b style="color:var(--primary)">VARORDERZ</b> — by Varoo
+  <br><br>
+  <span class="dev-trigger" id="devTrigger">•</span>
+</footer>
+
+<!-- MODAL DEV LOGIN -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <h2>🔐 Akses Developer</h2>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="devPass" placeholder="Masukkan password...">
+    </div>
+    <button class="btn" onclick="devLogin()">Masuk</button>
+    <button class="btn btn-outline" onclick="closeModal('loginModal')">Batal</button>
+  </div>
+</div>
+
+<!-- MODAL DEV PANEL -->
+<div class="modal-overlay" id="devModal">
+  <div class="modal" style="max-width:560px">
+    <h2>⚙️ Panel Developer</h2>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('produk', this)">Produk</button>
+      <button class="tab" onclick="switchTab('promo', this)">Promosi</button>
+    </div>
+
+    <div id="tab-produk">
+      <div class="field"><label>Nama Produk</label><input id="pNama" placeholder="Contoh: Jasa Desain Logo"></div>
+      <div class="field"><label>Deskripsi</label><textarea id="pDesc" placeholder="Deskripsi singkat..."></textarea></div>
+      <div class="field"><label>Link Produk (WA/Shopee/dll)</label><input id="pLink" placeholder="https://..."></div>
+      <div class="field"><label>Gambar Produk (URL)</label><input id="pImg" placeholder="https://..."></div>
+      <div class="field"><label>Harga (Rp)</label><input id="pHarga" type="number" placeholder="50000"></div>
+      <button class="btn" onclick="saveProduct()">💾 Simpan Produk</button>
+      <div style="margin-top:20px">
+        <div class="section-title" style="font-size:14px">Daftar Produk</div>
+        <div id="devProductList"></div>
+      </div>
+    </div>
+
+    <div id="tab-promo" style="display:none">
+      <div class="field"><label>Nama Web</label><input id="wNama" placeholder="Contoh: Kayz Suntik Sosmed"></div>
+      <div class="field"><label>Gambar Web (URL)</label><input id="wImg" placeholder="https://..."></div>
+      <div class="field"><label>Link Web</label><input id="wLink" placeholder="https://..."></div>
+      <div class="field"><label>Deskripsi</label><textarea id="wDesc" placeholder="Deskripsi singkat..."></textarea></div>
+      <button class="btn" onclick="savePromo()">💾 Simpan Promosi</button>
+      <div style="margin-top:20px">
+        <div class="section-title" style="font-size:14px">Daftar Promosi</div>
+        <div id="devPromoList"></div>
+      </div>
+    </div>
+
+    <button class="btn btn-outline" onclick="closeModal('devModal')" style="margin-top:16px">Tutup Panel</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- FIREBASE SDK + APP LOGIC -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {
+  getDatabase, ref, push, set, onValue, remove, update
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+// ---------- FIREBASE CONFIG ----------
+const firebaseConfig = {
+  apiKey: "AIzaSyDp_3SDiQUAGX0_gw8BYtO2Ecnypl1GlgE",
+  authDomain: "project1-f57d6.firebaseapp.com",
+  databaseURL: "https://project1-f57d6-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "project1-f57d6",
+  storageBucket: "project1-f57d6.firebasestorage.app",
+  messagingSenderId: "722737960517",
+  appId: "1:722737960517:web:f465039879d08fa306b52c",
+  measurementId: "G-KER0HVH84V"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// ---------- CONST ----------
+const DEV_PASSWORD = "4ksesvardev";
+let isDev = false;
+
+// ---------- TOAST ----------
+function toast(msg, type = "ok") {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.style.borderColor = type === "ok" ? "#a855f7" : "#ef4444";
+  el.classList.add("show");
+  setTimeout(() => el.classList.remove("show"), 2200);
+}
+
+// ---------- MODAL ----------
+window.closeModal = function (id) {
+  document.getElementById(id).classList.remove("active");
+};
+function openModal(id) {
+  document.getElementById(id).classList.add("active");
+}
+
+// ---------- DEV LOGIN ----------
+document.getElementById("devTrigger").addEventListener("click", () => {
+  if (isDev) { openModal("devModal"); return; }
+  document.getElementById("devPass").value = "";
+  openModal("loginModal");
+});
+
+window.devLogin = function () {
+  const pass = document.getElementById("devPass").value.trim();
+  if (pass === DEV_PASSWORD) {
+    isDev = true;
+    closeModal("loginModal");
+    openModal("devModal");
+    toast("✅ Login dev berhasil!");
+  } else {
+    toast("❌ Password salah!", "err");
+  }
+};
+
+// ---------- TAB ----------
+window.switchTab = function (tab, btn) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("tab-produk").style.display = tab === "produk" ? "block" : "none";
+  document.getElementById("tab-promo").style.display = tab === "promo" ? "block" : "none";
+};
+
+// ---------- HELPER ----------
+function rupiah(n) {
+  return "Rp " + Number(n || 0).toLocaleString("id-ID");
+}
+function esc(s) {
+  return String(s || "").replace(/[&<>"']/g, m => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+  }[m]));
+}
+function emptyBox(text) {
+  return `<div class="empty">${text}</div>`;
+}
+
+// ==============================================
+// PRODUK
+// ==============================================
+const productRef = ref(db, "produk");
+
+window.saveProduct = function () {
+  const nama = document.getElementById("pNama").value.trim();
+  const desc = document.getElementById("pDesc").value.trim();
+  const link = document.getElementById("pLink").value.trim();
+  const img  = document.getElementById("pImg").value.trim();
+  const harga = document.getElementById("pHarga").value.trim();
+
+  if (!nama || !harga) return toast("Nama & harga wajib diisi!", "err");
+
+  const data = {
+    nama, desc, link, img, harga: Number(harga),
+    createdAt: Date.now()
+  };
+
+  push(productRef, data)
+    .then(() => {
+      toast("✅ Produk disimpan!");
+      ["pNama","pDesc","pLink","pImg","pHarga"].forEach(id => document.getElementById(id).value = "");
+    })
+    .catch(err => toast("❌ " + err.message, "err"));
+};
+
+window.delProduct = function (id) {
+  if (!confirm("Hapus produk ini?")) return;
+  remove(ref(db, "produk/" + id)).then(() => toast("🗑️ Produk dihapus"));
+};
+
+onValue(productRef, snap => {
+  const data = snap.val() || {};
+  const items = Object.entries(data).map(([id, v]) => ({ id, ...v }))
+    .sort((a, b) => b.createdAt - a.createdAt);
+
+  const pub = document.getElementById("productList");
+  const dev = document.getElementById("devProductList");
+
+  if (!items.length) {
+    pub.innerHTML = emptyBox("Belum ada produk. Stay tuned! 🛒");
+  } else {
+    pub.innerHTML = items.map(p => `
+      <div class="card">
+        <img src="${esc(p.img) || 'https://via.placeholder.com/400x300/12121a/a855f7?text=No+Image'}"
+             onerror="this.src='https://via.placeholder.com/400x300/12121a/a855f7?text=No+Image'"
+             alt="${esc(p.nama)}">
+        <div class="card-body">
+          <h3>${esc(p.nama)}</h3>
+          <div class="desc">${esc(p.desc) || "Tidak ada deskripsi."}</div>
+          <div class="price">${rupiah(p.harga)}</div>
+          ${p.link ? `<a class="btn-buy" href="${esc(p.link)}" target="_blank">🛒 Beli Sekarang</a>` : ""}
+        </div>
+      </div>
+    `).join("");
+  }
+
+  if (dev) {
+    dev.innerHTML = items.length ? items.map(p => `
+      <div class="dev-item">
+        <div class="dev-item-info">
+          <h4>${esc(p.nama)}</h4>
+          <span>${rupiah(p.harga)}</span>
+        </div>
+        <div class="dev-actions">
+          <button class="btn-del" onclick="delProduct('${p.id}')">Hapus</button>
+        </div>
+      </div>
+    `).join("") : `<div class="empty" style="padding:20px">Belum ada produk.</div>`;
+  }
+});
+
+// ==============================================
+// PROMOSI
+// ==============================================
+const promoRef = ref(db, "promosi");
+
+window.savePromo = function () {
+  const nama = document.getElementById("wNama").value.trim();
+  const img  = document.getElementById("wImg").value.trim();
+  const link = document.getElementById("wLink").value.trim();
+  const desc = document.getElementById("wDesc").value.trim();
+
+  if (!nama || !link) return toast("Nama & link wajib diisi!", "err");
+
+  const data = { nama, img, link, desc, createdAt: Date.now() };
+
+  push(promoRef, data)
+    .then(() => {
+      toast("✅ Promosi disimpan!");
+      ["wNama","wImg","wLink","wDesc"].forEach(id => document.getElementById(id).value = "");
+    })
+    .catch(err => toast("❌ " + err.message, "err"));
+};
+
+window.delPromo = function (id) {
+  if (!confirm("Hapus promosi ini?")) return;
+  remove(ref(db, "promosi/" + id)).then(() => toast("🗑️ Promosi dihapus"));
+};
+
+onValue(promoRef, snap => {
+  const data = snap.val() || {};
+  const items = Object.entries(data).map(([id, v]) => ({ id, ...v }))
+    .sort((a, b) => b.createdAt - a.createdAt);
+
+  const pub = document.getElementById("promoList");
+  const dev = document.getElementById("devPromoList");
+
+  if (!items.length) {
+    pub.innerHTML = emptyBox("Belum ada promosi web. 🔗");
+  } else {
+    pub.innerHTML = items.map(p => `
+      <div class="promo">
+        <img src="${esc(p.img) || 'https://via.placeholder.com/600x300/12121a/06b6d4?text=Web'}"
+             onerror="this.src='https://via.placeholder.com/600x300/12121a/06b6d4?text=Web'"
+             alt="${esc(p.nama)}">
+        <div class="promo-body">
+          <h3>${esc(p.nama)}</h3>
+          <p>${esc(p.desc) || "Tidak ada deskripsi."}</p>
+          <a class="btn-visit" href="${esc(p.link)}" target="_blank">🌐 Kunjungi</a>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  if (dev) {
+    dev.innerHTML = items.length ? items.map(p => `
+      <div class="dev-item">
+        <div class="dev-item-info">
+          <h4>${esc(p.nama)}</h4>
+          <span>${esc(p.link)}</span>
+        </div>
+        <div class="dev-actions">
+          <button class="btn-del" onclick="delPromo('${p.id}')">Hapus</button>
+        </div>
+      </div>
+    `).join("") : `<div class="empty" style="padding:20px">Belum ada promosi.</div>`;
+  }
+});
+
+// ---------- INIT ----------
+console.log("%cVARORDERZ v1.0 — by Varoo (2026)", "color:#a855f7;font-weight:bold;font-size:14px");
+</script>
+</body>
+</html>
